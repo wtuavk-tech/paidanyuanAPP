@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Phone, MapPin, ChevronDown, MoreHorizontal, MessageCircleWarning } from 'lucide-react';
+import { Search, Filter, Phone, MapPin, ChevronDown, ChevronUp, MoreHorizontal, MessageCircleWarning, ChevronRight, CheckCircle2, Circle } from 'lucide-react';
 import { Order, OrderStatus } from '../types';
 
 const mockOrders: Order[] = [
@@ -44,42 +44,210 @@ const mockOrders: Order[] = [
 
 const OrderManagement: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('全部');
+  const [isStatsExpanded, setIsStatsExpanded] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Filter State
+  const [dateRangeFilter, setDateRangeFilter] = useState('近三个月');
+  const [dataType, setDataType] = useState<'team' | 'individual'>('individual');
+
+  const statsData = [
+    { label: '未派单数', value: '0', color: 'text-orange-400' },
+    { label: '收款率', value: '0', color: 'text-emerald-500' },
+    { label: '当日业绩', value: '0.00', color: 'text-blue-500' },
+    { label: '当日微信业绩', value: '0', color: 'text-blue-500' },
+    { label: '总单数', value: '0', color: 'text-blue-500' },
+    { label: '今日派单', value: '0', color: 'text-gray-800' },
+    { label: '往日派单', value: '0', color: 'text-blue-500' },
+    { label: '他派', value: '0', color: 'text-blue-500' },
+    { label: '自派', value: '0', color: 'text-blue-500' },
+    { label: '单库派单数', value: '0', color: 'text-blue-500' },
+    { label: '自动线下业绩', value: '0', color: 'text-blue-500' },
+    { label: '手动线下业绩', value: '0', color: 'text-blue-500' },
+    { label: '自动平台业绩', value: '0', color: 'text-blue-500' },
+    { label: '手动平台业绩', value: '0', color: 'text-blue-500' },
+    { label: '取消订单', value: '0', color: 'text-red-500' },
+    { label: '线下业绩', value: '0', color: 'text-blue-500' },
+    { label: '平台业绩', value: '0', color: 'text-blue-500' },
+    { label: '派单率', value: '0', color: 'text-blue-500' },
+  ];
 
   return (
-    <div className="flex flex-col h-full bg-bg pb-24">
-      {/* Header Gradient Stats */}
-      <div className="bg-gradient-to-br from-blue-400 to-blue-600 pb-5 pt-10 px-4 text-white rounded-b-[2rem] shadow-lg relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
-           <svg width="200" height="200" viewBox="0 0 100 100" fill="white"><circle cx="50" cy="50" r="40"/></svg>
-        </div>
-        <div className="absolute bottom-0 left-0 opacity-10 transform -translate-x-4 translate-y-4">
-           <svg width="100" height="100" viewBox="0 0 100 100" fill="white"><rect x="10" y="10" width="80" height="80" rx="20"/></svg>
-        </div>
-        
-        <div className="relative z-10 flex flex-col items-center">
-            <div className="text-center font-bold text-lg mb-6 flex items-center justify-center gap-1 opacity-90">
-                订单数据 <ChevronDown className="w-4 h-4 opacity-70" />
+    <div className="flex flex-col h-full bg-bg pb-24 relative">
+      
+      {/* --- Filter Overlay (Image 2) --- */}
+      {isFilterOpen && (
+        <div className="absolute inset-0 z-50 flex flex-col bg-bg">
+          <div className="bg-white px-4 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">按条件选择</h2>
+            <button onClick={() => setIsFilterOpen(false)} className="text-gray-400 p-1">
+               <ChevronUp className="rotate-180" /> {/* Simulate Close/Down */}
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto">
+            <div className="bg-white mb-3 px-4">
+               {['派单方式', '地域', '师傅', '来源', '服务项目'].map((item, idx) => (
+                 <div key={item} className={`flex items-center justify-between py-4 ${idx !== 4 ? 'border-b border-gray-50' : ''}`}>
+                    <span className="text-base text-gray-800 font-medium">{item}</span>
+                    <div className="flex items-center gap-2 text-gray-400">
+                        {item === '地域' ? (
+                            <span className="text-sm text-gray-300">请输入地域</span>
+                        ) : item === '师傅' ? (
+                            <span className="text-sm text-gray-300">请输入</span>
+                        ) : item === '服务项目' ? (
+                            <span className="text-sm text-gray-300">请输入项目</span>
+                        ) : (
+                            <span className="text-sm">请选择</span>
+                        )}
+                        {(item === '派单方式' || item === '来源') && <ChevronRight size={18} />}
+                    </div>
+                 </div>
+               ))}
             </div>
 
-            <div className="grid grid-cols-3 gap-4 w-full text-center">
-              <div className="flex flex-col items-center">
-                <div className="text-2xl font-bold text-orange-200 drop-shadow-sm font-mono">0</div>
-                <div className="text-xs text-blue-100 mt-1 opacity-80">未派单数</div>
-              </div>
-              <div className="flex flex-col items-center relative">
-                <div className="absolute left-0 top-2 bottom-2 w-px bg-blue-300/30"></div>
-                <div className="absolute right-0 top-2 bottom-2 w-px bg-blue-300/30"></div>
-                <div className="text-2xl font-bold text-emerald-200 drop-shadow-sm font-mono">0</div>
-                <div className="text-xs text-blue-100 mt-1 opacity-80">收款率</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-2xl font-bold text-white drop-shadow-sm font-mono">0.00</div>
-                <div className="text-xs text-blue-100 mt-1 opacity-80">当日业绩</div>
-              </div>
+            <div className="bg-white mb-3 px-4 py-4 flex items-center justify-between">
+                <span className="text-base text-gray-800 font-medium">数据</span>
+                <div className="flex items-center gap-6">
+                    <button 
+                        className="flex items-center gap-2"
+                        onClick={() => setDataType('team')}
+                    >
+                        {dataType === 'team' ? <CheckCircle2 className="text-primary w-5 h-5" /> : <Circle className="text-gray-300 w-5 h-5" />}
+                        <span className="text-sm text-gray-600">团队</span>
+                    </button>
+                    <button 
+                        className="flex items-center gap-2"
+                        onClick={() => setDataType('individual')}
+                    >
+                        {dataType === 'individual' ? <CheckCircle2 className="text-primary w-5 h-5" /> : <Circle className="text-gray-300 w-5 h-5" />}
+                        <span className="text-sm text-gray-600">个人</span>
+                    </button>
+                </div>
+            </div>
+
+            <div className="bg-white px-4 py-4 pb-8">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">录入时间</h3>
+                <div className="flex flex-wrap gap-3 mb-4">
+                    {['当日', '近一周', '当月', '近三个月', '近半年', '自定义'].map(tag => (
+                        <button
+                            key={tag}
+                            onClick={() => setDateRangeFilter(tag)}
+                            className={`px-5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                dateRangeFilter === tag 
+                                ? 'bg-primary text-white shadow-sm' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                        >
+                            {tag}
+                        </button>
+                    ))}
+                </div>
+                <div className="bg-gray-100 rounded-lg p-3 text-center text-sm font-mono text-gray-600 tracking-wide">
+                    2025-09-26 14:47:36 - 2025-12-25 14:47:36
+                </div>
+            </div>
+          </div>
+
+          {/* Filter Bottom Buttons */}
+          <div className="bg-white p-4 flex gap-4 border-t border-gray-100">
+             <button 
+                onClick={() => {
+                    setDateRangeFilter('近三个月');
+                    setDataType('individual');
+                }}
+                className="flex-1 py-3 rounded-full border border-primary text-primary font-bold text-base hover:bg-blue-50 transition-colors"
+             >
+                重置
+             </button>
+             <button 
+                onClick={() => setIsFilterOpen(false)}
+                className="flex-1 py-3 rounded-full bg-primary text-white font-bold text-base shadow-lg hover:bg-primary-dark transition-colors"
+             >
+                确认
+             </button>
+          </div>
+        </div>
+      )}
+
+      {/* --- Main Content --- */}
+      
+      {/* Expanded Stats Overlay (Image 1) */}
+      {isStatsExpanded ? (
+        <div className="bg-gradient-to-b from-blue-200 via-blue-50 to-bg pb-4 pt-4 px-4 relative z-40 rounded-b-[2rem] shadow-xl animate-in fade-in slide-in-from-top-10 duration-200">
+            {/* Header Title with Tag */}
+            <div className="flex justify-center mb-6 relative">
+                 <div className="bg-gradient-to-r from-blue-400 to-blue-500 text-white px-8 py-1.5 rounded-lg text-lg font-bold shadow-md transform skew-x-[-10deg]">
+                    <span className="transform skew-x-[10deg] inline-block">订单数据</span>
+                 </div>
+                 {/* Decorative background elements */}
+                 <div className="absolute top-0 right-0 opacity-20">
+                    <svg width="100" height="60" viewBox="0 0 100 60"><circle cx="80" cy="20" r="30" fill="white"/></svg>
+                 </div>
+            </div>
+
+            {/* Grid */}
+            <div className="grid grid-cols-3 gap-y-8 gap-x-2 text-center mb-4">
+                {statsData.map((item, index) => (
+                    <div key={index} className="flex flex-col items-center relative group">
+                        <div className={`text-[22px] font-bold ${item.color} mb-1 font-sans`}>{item.value}</div>
+                        <div className="text-gray-600 text-sm">{item.label}</div>
+                        {/* Vertical Dividers logic: Add divider to the right of 1st and 2nd column */}
+                        {(index + 1) % 3 !== 0 && (
+                            <div className="absolute right-0 top-2 bottom-2 w-px bg-gray-200/60"></div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Collapse Button */}
+            <div className="flex justify-center mt-2">
+                <button 
+                    onClick={() => setIsStatsExpanded(false)}
+                    className="bg-blue-100/50 hover:bg-blue-200/50 p-1 rounded-full transition-colors"
+                >
+                    <ChevronUp className="text-primary w-6 h-6" />
+                </button>
             </div>
         </div>
-      </div>
+      ) : (
+        /* Collapsed Header (Original Stats Summary) */
+        <div className="bg-gradient-to-br from-blue-400 to-blue-600 pb-5 pt-10 px-4 text-white rounded-b-[2rem] shadow-lg relative overflow-hidden transition-all duration-300">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
+            <svg width="200" height="200" viewBox="0 0 100 100" fill="white"><circle cx="50" cy="50" r="40"/></svg>
+            </div>
+            <div className="absolute bottom-0 left-0 opacity-10 transform -translate-x-4 translate-y-4">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="white"><rect x="10" y="10" width="80" height="80" rx="20"/></svg>
+            </div>
+            
+            <div className="relative z-10 flex flex-col items-center">
+                <button 
+                    onClick={() => setIsStatsExpanded(true)}
+                    className="text-center font-bold text-lg mb-6 flex items-center justify-center gap-1 opacity-90 hover:opacity-100 transition-opacity"
+                >
+                    订单数据 <ChevronDown className="w-4 h-4 opacity-70" />
+                </button>
+
+                <div className="grid grid-cols-3 gap-4 w-full text-center">
+                <div className="flex flex-col items-center">
+                    <div className="text-2xl font-bold text-orange-200 drop-shadow-sm font-mono">0</div>
+                    <div className="text-xs text-blue-100 mt-1 opacity-80">未派单数</div>
+                </div>
+                <div className="flex flex-col items-center relative">
+                    <div className="absolute left-0 top-2 bottom-2 w-px bg-blue-300/30"></div>
+                    <div className="absolute right-0 top-2 bottom-2 w-px bg-blue-300/30"></div>
+                    <div className="text-2xl font-bold text-emerald-200 drop-shadow-sm font-mono">0</div>
+                    <div className="text-xs text-blue-100 mt-1 opacity-80">收款率</div>
+                </div>
+                <div className="flex flex-col items-center">
+                    <div className="text-2xl font-bold text-white drop-shadow-sm font-mono">0.00</div>
+                    <div className="text-xs text-blue-100 mt-1 opacity-80">当日业绩</div>
+                </div>
+                </div>
+            </div>
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="flex items-center justify-between px-4 py-3 bg-white sticky top-0 z-20 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
@@ -117,10 +285,13 @@ const OrderManagement: React.FC = () => {
             </div>
             <span className="text-[10px] scale-90">快找</span>
         </div>
-        <div className="flex flex-col items-center justify-center text-gray-500 gap-0.5">
-             <Filter className="w-5 h-5 text-gray-500" />
+        <button 
+            onClick={() => setIsFilterOpen(true)}
+            className="flex flex-col items-center justify-center text-gray-500 gap-0.5 hover:text-primary transition-colors"
+        >
+             <Filter className="w-5 h-5" />
              <span className="text-[10px] scale-90">筛选</span>
-        </div>
+        </button>
       </div>
 
       {/* Order List */}
