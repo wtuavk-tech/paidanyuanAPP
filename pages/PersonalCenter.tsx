@@ -17,7 +17,7 @@ const PersonalCenter: React.FC = () => {
                     <div className="absolute bottom-0 right-0 w-5 h-5 bg-success rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-tight">吴会东</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 tracking-tight">张三</h2>
                     <div className="text-xs text-gray-500 mt-1 flex items-center gap-1 bg-white/60 px-2 py-0.5 rounded-full w-fit">
                         <span className="w-2 h-2 rounded-full bg-primary"></span>
                         已认证员工
