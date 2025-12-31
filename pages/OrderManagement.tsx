@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Phone, MapPin, ChevronDown, ChevronUp, MoreHorizontal, MessageCircle, ChevronRight, CheckCircle, Circle } from 'lucide-react';
-import { Order, OrderStatus } from '../types';
+import { Order, OrderStatus } from '../types.ts';
 
 const mockOrders: Order[] = [
   {

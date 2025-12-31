@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import BottomNav from './components/BottomNav';
-import OrderManagement from './pages/OrderManagement';
-import OrderPool from './pages/OrderPool';
-import UrgentChat from './pages/UrgentChat';
-import AfterSales from './pages/AfterSales';
-import PersonalCenter from './pages/PersonalCenter';
+import BottomNav from './components/BottomNav.tsx';
+import OrderManagement from './pages/OrderManagement.tsx';
+import OrderPool from './pages/OrderPool.tsx';
+import UrgentChat from './pages/UrgentChat.tsx';
+import AfterSales from './pages/AfterSales.tsx';
+import PersonalCenter from './pages/PersonalCenter.tsx';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);

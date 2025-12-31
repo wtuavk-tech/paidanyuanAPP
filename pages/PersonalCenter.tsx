@@ -1,5 +1,9 @@
 import React from 'react';
-import { Settings, ChevronRight, Wallet, Ticket, FileText, Phone, MessageCircle } from 'lucide-react';
+import { 
+  Settings, ChevronRight, Wallet, Ticket, FileText, Phone, MessageCircle, 
+  ClipboardList, Activity, Receipt, CreditCard, Calendar, Coins, Banknote, 
+  PhoneCall, Edit3, Megaphone, Bell
+} from 'lucide-react';
 
 const PersonalCenter: React.FC = () => {
   return (
@@ -72,41 +76,41 @@ const PersonalCenter: React.FC = () => {
             <div className="grid grid-cols-3 gap-y-8 gap-x-4">
                 {/* Row 1 */}
                 <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 relative shadow-sm transition-transform group-hover:-translate-y-1">
-                        <FileText size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white relative shadow-md shadow-blue-200 transition-transform group-hover:-translate-y-1">
+                        <ClipboardList size={22} strokeWidth={2} />
                         <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm font-bold">0</span>
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">任务</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center text-pink-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <Ticket size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-500 flex items-center justify-center text-white shadow-md shadow-purple-200 transition-transform group-hover:-translate-y-1">
+                        <Activity size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">跟单</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-yellow-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <Wallet size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-200 transition-transform group-hover:-translate-y-1">
+                        <Receipt size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">报销管理</span>
                 </div>
 
                 {/* Row 2 */}
                  <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center text-pink-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <span className="text-xl font-black">¥</span>
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center text-white shadow-md shadow-red-200 transition-transform group-hover:-translate-y-1">
+                        <CreditCard size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">提现管理</span>
                 </div>
                  <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <FileText size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-200 transition-transform group-hover:-translate-y-1">
+                        <Calendar size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">工作日报</span>
                 </div>
                  <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 relative shadow-sm transition-transform group-hover:-translate-y-1">
-                        <span className="text-xl font-black">¥+</span>
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white relative shadow-md shadow-cyan-200 transition-transform group-hover:-translate-y-1">
+                        <Coins size={22} strokeWidth={2} />
                         <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm font-bold">11</span>
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">订单垫付</span>
@@ -114,26 +118,26 @@ const PersonalCenter: React.FC = () => {
 
                 {/* Row 3 */}
                 <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <span className="text-xl font-black">¥</span>
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white shadow-md shadow-green-200 transition-transform group-hover:-translate-y-1">
+                        <Banknote size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">微信对账</span>
                 </div>
                  <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-cyan-50 flex items-center justify-center text-cyan-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <Phone size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-200 transition-transform group-hover:-translate-y-1">
+                        <PhoneCall size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">拨打电话</span>
                 </div>
                  <div className="flex flex-col items-center gap-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <FileText size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200 transition-transform group-hover:-translate-y-1">
+                        <Edit3 size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">录单</span>
                 </div>
                  <div className="flex flex-col items-center gap-2 mt-2 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm transition-transform group-hover:-translate-y-1">
-                        <MessageCircle size={22} strokeWidth={2.5} />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white shadow-md shadow-yellow-200 transition-transform group-hover:-translate-y-1">
+                        <Megaphone size={22} strokeWidth={2} />
                     </div>
                     <span className="text-xs font-medium text-gray-700 group-hover:text-primary">公告</span>
                 </div>

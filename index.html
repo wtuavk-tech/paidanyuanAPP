@@ -58,8 +58,12 @@
   }
 }
 </script>
+<!-- Add Babel for runtime compilation -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
   <body>
     <div id="root"></div>
+    <!-- Load the main entry point with Babel processing -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
