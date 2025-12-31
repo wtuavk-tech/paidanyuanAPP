@@ -1,8 +1,8 @@
 import React from 'react';
 import { 
-  Settings, ChevronRight, Wallet, Ticket, FileText, Phone, MessageCircle, 
+  Settings, ChevronRight, 
   ClipboardList, Activity, Receipt, CreditCard, Calendar, Coins, Banknote, 
-  PhoneCall, Edit3, Megaphone, Bell
+  PhoneCall, Edit3, Megaphone
 } from 'lucide-react';
 
 const PersonalCenter: React.FC = () => {
