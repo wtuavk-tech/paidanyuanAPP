@@ -73,6 +73,48 @@ const OrderManagement: React.FC = () => {
     { label: '派单率', value: '95%', color: 'text-blue-500' },
   ];
 
+  const handleQuickSearch = () => {
+      const searchTerms = ['138xxxx1234', '20251209xxxx', '张小姐'];
+      const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)];
+      alert(`[演示] 正在快速查找...\n模拟输入: ${randomTerm}\n找到 3 条相关记录`);
+  };
+
+  const handleRecordPrice = (id: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      const randomPrice = (Math.random() * 500 + 50).toFixed(2);
+      alert(`[演示] 订单 ${id}\n价格录入成功: ¥${randomPrice}\n已同步至财务系统`);
+  };
+
+  const handleMenuAction = (action: string, id: string) => {
+      setOpenMenuId(null);
+      const techs = ['王师傅', '李师傅', '赵师傅'];
+      const randomTech = techs[Math.floor(Math.random() * techs.length)];
+      
+      let msg = '';
+      switch(action) {
+          case '群聊': msg = `已创建订单 ${id} 的专属群聊\n群成员: 客服, ${randomTech}, 用户`; break;
+          case '开票': msg = `订单 ${id} 开票申请已提交\n发票金额: ¥200.00\n抬头: 个人`; break;
+          case '中转': msg = `订单 ${id} 已中转给 ${randomTech}`; break;
+          case '取消': msg = `订单 ${id} 取消流程已发起\n原因: 客户暂不需要`; break;
+          case '修改': msg = `正在打开订单 ${id} 的修改页面...`; break;
+      }
+      alert(`[演示] ${msg}`);
+  };
+
+  const handleOrderButton = (action: string, id: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      alert(`[演示] 对订单 ${id} 执行了【${action}】操作\n状态已更新`);
+  };
+
+  const handleCopy = (id: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      alert(`[演示] 订单信息 ${id} 已复制到剪贴板！\n内容：\n客户：张三\n电话：13800000000\n地址：...`);
+  };
+
+  const handleCardClick = (id: string) => {
+      alert(`[演示] 进入订单 ${id} 详情页`);
+  };
+
   return (
     <div className="flex flex-col h-full bg-bg pb-24 relative">
       
@@ -89,7 +131,7 @@ const OrderManagement: React.FC = () => {
           <div className="flex-1 overflow-y-auto">
             <div className="bg-white mb-3 px-4">
                {['派单方式', '地域', '师傅', '来源', '服务项目'].map((item, idx) => (
-                 <div key={item} className={`flex items-center justify-between py-4 ${idx !== 4 ? 'border-b border-gray-50' : ''}`}>
+                 <div key={item} onClick={() => alert(`[演示] 选择${item}...`)} className={`flex items-center justify-between py-4 ${idx !== 4 ? 'border-b border-gray-50' : ''} active:bg-gray-50`}>
                     <span className="text-base text-gray-800 font-medium">{item}</span>
                     <div className="flex items-center gap-2 text-gray-400">
                         {item === '地域' ? (
@@ -293,12 +335,15 @@ const OrderManagement: React.FC = () => {
           />
           <Search className="w-5 h-5 text-gray-400" />
         </div>
-        <div className="flex flex-col items-center justify-center text-gray-500 gap-0.5">
+        <button 
+            onClick={handleQuickSearch}
+            className="flex flex-col items-center justify-center text-gray-500 gap-0.5 hover:text-primary transition-colors"
+        >
             <div className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 rounded-full bg-gray-300"></div>
             </div>
             <span className="text-[10px] scale-90">快找</span>
-        </div>
+        </button>
         <button 
             onClick={() => setIsFilterOpen(true)}
             className="flex flex-col items-center justify-center text-gray-500 gap-0.5 hover:text-primary transition-colors"
@@ -311,7 +356,7 @@ const OrderManagement: React.FC = () => {
       {/* Order List */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
         {mockOrders.map((order) => (
-          <div key={order.id} className="bg-white rounded-2xl p-4 shadow-card hover:shadow-md transition-shadow duration-200 border border-gray-50 relative">
+          <div key={order.id} onClick={() => handleCardClick(order.id)} className="bg-white rounded-2xl p-4 shadow-card hover:shadow-md transition-shadow duration-200 border border-gray-50 relative cursor-pointer active:scale-[0.99] transition-transform">
             
             {/* Status Bar Top */}
             <div className="flex justify-between items-start mb-3">
@@ -321,7 +366,10 @@ const OrderManagement: React.FC = () => {
                  </div>
                  <span className="text-gray-400 text-xs font-mono tracking-tight">{order.id}</span>
               </div>
-              <button className="bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-colors">
+              <button 
+                  onClick={(e) => handleRecordPrice(order.id, e)}
+                  className="bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-colors"
+              >
                 录价格
               </button>
             </div>
@@ -388,7 +436,7 @@ const OrderManagement: React.FC = () => {
                   {openMenuId === order.id && (
                     <>
                         {/* Backdrop */}
-                        <div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)}></div>
+                        <div className="fixed inset-0 z-10" onClick={(e) => {e.stopPropagation(); setOpenMenuId(null)}}></div>
                         
                         {/* Menu Content - Positioned ABOVE the button */}
                         <div className="absolute bottom-full left-0 mb-1 bg-white rounded-lg shadow-[0_4px_16px_rgba(0,0,0,0.12)] border border-gray-100 z-50 w-24 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 origin-bottom-left">
@@ -396,7 +444,7 @@ const OrderManagement: React.FC = () => {
                                 <button 
                                     key={action}
                                     className="py-3 text-center text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-b border-gray-50 last:border-none font-medium"
-                                    onClick={() => setOpenMenuId(null)}
+                                    onClick={(e) => { e.stopPropagation(); handleMenuAction(action, order.id); }}
                                 >
                                     {action}
                                 </button>
@@ -409,19 +457,19 @@ const OrderManagement: React.FC = () => {
               <div className="flex gap-2">
                 {order.status === OrderStatus.PENDING ? (
                     <>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">修改</button>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">解决</button>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">处理</button>
+                        <button onClick={(e) => handleOrderButton('修改', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">修改</button>
+                        <button onClick={(e) => handleOrderButton('解决', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">解决</button>
+                        <button onClick={(e) => handleOrderButton('处理', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">处理</button>
                     </>
                 ) : (
                     <>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">报错</button>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">作废</button>
-                        <button className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">完成</button>
+                        <button onClick={(e) => handleOrderButton('报错', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">报错</button>
+                        <button onClick={(e) => handleOrderButton('作废', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">作废</button>
+                        <button onClick={(e) => handleOrderButton('完成', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">完成</button>
                     </>
                 )}
                 
-                <button className="border border-primary text-primary text-xs font-bold px-4 py-1.5 rounded-full hover:bg-blue-50 transition-colors">复制</button>
+                <button onClick={(e) => handleCopy(order.id, e)} className="border border-primary text-primary text-xs font-bold px-4 py-1.5 rounded-full hover:bg-blue-50 transition-colors">复制</button>
               </div>
             </div>
           </div>

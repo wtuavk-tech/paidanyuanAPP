@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
 const mockTickets = [
   {
     id: '25112717107342',
     date: '2025-11-27 17:12:40',
-    request: 'gadsfgsd',
-    note: '',
+    request: '客户反馈水管维修后仍有渗漏',
+    note: '急',
     recordUser: '张三',
     dispatchUser: '吴会东',
     master: '许仙',
@@ -15,7 +15,7 @@ const mockTickets = [
   {
     id: '25112614145269',
     date: '2025-11-27 16:27:16',
-    request: '以后等会等会',
+    request: '服务态度不好，要求解释',
     note: '',
     recordUser: '张三',
     dispatchUser: '吴会东',
@@ -25,7 +25,7 @@ const mockTickets = [
   {
     id: '25112517472877',
     date: '2025-11-26 16:32:54',
-    request: '为的防守高手对方是个还是',
+    request: '费用问题，多收了50元材料费',
     note: '',
     recordUser: '',
     dispatchUser: '',
@@ -35,6 +35,12 @@ const mockTickets = [
 ];
 
 const AfterSales: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('售后中');
+
+  const handleAction = (action: string, id: string) => {
+      alert(`[演示] 对工单 ${id} 执行【${action}】\n操作已记录。`);
+  };
+
   return (
     <div className="flex flex-col h-full bg-bg pb-24">
       <div className="bg-white pt-8 pb-2 text-center font-bold text-gray-800 text-lg shadow-sm z-10">
@@ -42,13 +48,16 @@ const AfterSales: React.FC = () => {
       </div>
 
       <div className="bg-white px-2 pt-2 flex items-center justify-between border-b border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] z-10">
-         <div className="flex-1 text-center pb-3 relative cursor-pointer">
-            <span className="text-primary font-bold text-base">售后中</span>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full"></div>
-         </div>
-         <div className="flex-1 text-center pb-3 text-gray-500 text-sm font-medium hover:text-gray-700 cursor-pointer">已办结</div>
-         <div className="flex-1 text-center pb-3 text-gray-500 text-sm font-medium hover:text-gray-700 cursor-pointer">已付款</div>
-         <div className="flex-1 text-center pb-3 text-gray-500 text-sm font-medium hover:text-gray-700 cursor-pointer">已作废</div>
+         {['售后中', '已办结', '已付款', '已作废'].map(tab => (
+             <div 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 text-center pb-3 relative cursor-pointer transition-colors ${activeTab === tab ? 'text-primary font-bold text-base' : 'text-gray-500 text-sm font-medium hover:text-gray-700'}`}
+             >
+                <span>{tab}</span>
+                {activeTab === tab && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full animate-in zoom-in"></div>}
+             </div>
+         ))}
       </div>
 
       <div className="bg-white px-4 py-3 border-b border-gray-100">
@@ -120,12 +129,15 @@ const AfterSales: React.FC = () => {
                 </div>
 
                 <div className="flex justify-end gap-2 border-t border-gray-50 pt-3">
-                    <button className="bg-gray-100 text-gray-500 text-xs font-bold px-4 py-1.5 rounded-full hover:bg-gray-200 transition-colors">作废</button>
-                    <button className="bg-emerald-50 text-emerald-600 text-xs font-bold px-4 py-1.5 rounded-full hover:bg-emerald-100 transition-colors">办结</button>
-                    <button className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-blue-600 shadow-sm transition-colors">处理信息</button>
+                    <button onClick={() => handleAction('作废', ticket.id)} className="bg-gray-100 text-gray-500 text-xs font-bold px-4 py-1.5 rounded-full hover:bg-gray-200 transition-colors">作废</button>
+                    <button onClick={() => handleAction('办结', ticket.id)} className="bg-emerald-50 text-emerald-600 text-xs font-bold px-4 py-1.5 rounded-full hover:bg-emerald-100 transition-colors">办结</button>
+                    <button onClick={() => handleAction('处理信息', ticket.id)} className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-blue-600 shadow-sm transition-colors">处理信息</button>
                 </div>
             </div>
         ))}
+        {activeTab !== '售后中' && (
+             <div className="text-center text-gray-400 mt-10 text-sm">暂无{activeTab}记录</div>
+        )}
       </div>
 
     </div>

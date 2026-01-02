@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { ChatMessage } from '../types';
 
@@ -6,9 +6,9 @@ const mockChats: ChatMessage[] = [
   {
     id: '1',
     name: '张三（电话组一组）',
-    role: 'yuyuyu',
+    role: '客服专员',
     avatar: 'https://picsum.photos/100/100?random=1',
-    lastMessage: 'yuyuyu',
+    lastMessage: '这个单子的地址有点问题...',
     time: '11/24',
     unreadCount: 0,
     isOnline: true,
@@ -17,9 +17,9 @@ const mockChats: ChatMessage[] = [
   {
     id: '2',
     name: '管理员（售后部）',
-    role: '广东分公司',
+    role: '系统管理员',
     avatar: 'https://picsum.photos/100/100?random=2',
-    lastMessage: '广东分公司',
+    lastMessage: '请大家注意新的报销流程',
     time: '10/23',
     unreadCount: 0,
     isOnline: true,
@@ -28,9 +28,9 @@ const mockChats: ChatMessage[] = [
   {
     id: '3',
     name: '张水明',
-    role: '在上里',
+    role: '高级技师',
     avatar: 'https://picsum.photos/100/100?random=3',
-    lastMessage: '在上里',
+    lastMessage: '我已经到达现场了',
     time: '10/14',
     unreadCount: 0,
     isOnline: true,
@@ -39,9 +39,9 @@ const mockChats: ChatMessage[] = [
   {
     id: '4',
     name: '第三方店铺客服（电话组五组）',
-    role: '就是觉得',
+    role: '合作商户',
     avatar: 'https://picsum.photos/100/100?random=4',
-    lastMessage: '就是觉得',
+    lastMessage: '收到，马上处理',
     time: '09/10',
     unreadCount: 0,
     isOnline: false,
@@ -50,6 +50,16 @@ const mockChats: ChatMessage[] = [
 ];
 
 const UrgentChat: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'group' | 'individual'>('individual');
+
+  const handleChatClick = (name: string) => {
+      alert(`[演示] 正在打开与 "${name}" 的会话窗口...\n加载历史消息...`);
+  };
+
+  const filteredChats = activeTab === 'group' 
+    ? mockChats.filter(c => c.type === 'group') 
+    : mockChats; // For demo, let 'individual' show all or some specific mix, or strictly filter
+
   return (
     <div className="flex flex-col h-full bg-white pb-24">
        {/* Top Header Background */}
@@ -74,20 +84,35 @@ const UrgentChat: React.FC = () => {
              </div>
 
              <div className="flex justify-around mt-8 mb-4 border-b border-gray-100 pb-2">
-                 <div className="flex flex-col items-center pb-2 px-4 cursor-pointer">
-                    <span className="text-gray-400 text-base font-medium transition-colors hover:text-gray-600">订单群聊</span>
+                 <div 
+                    onClick={() => setActiveTab('group')}
+                    className="flex flex-col items-center relative pb-2 px-4 cursor-pointer transition-all"
+                 >
+                    <span className={`${activeTab === 'group' ? 'text-gray-800 font-bold text-xl' : 'text-gray-400 text-base font-medium'}`}>
+                        订单群聊
+                    </span>
+                    {activeTab === 'group' && <div className="absolute bottom-0 w-6 h-1 bg-primary rounded-full shadow-sm animate-in zoom-in"></div>}
                  </div>
-                 <div className="flex flex-col items-center relative pb-2 px-4 cursor-pointer">
-                    <span className="text-gray-800 font-bold text-xl">个聊</span>
-                    <div className="absolute bottom-0 w-6 h-1 bg-primary rounded-full shadow-sm"></div>
+                 <div 
+                    onClick={() => setActiveTab('individual')}
+                    className="flex flex-col items-center relative pb-2 px-4 cursor-pointer transition-all"
+                 >
+                    <span className={`${activeTab === 'individual' ? 'text-gray-800 font-bold text-xl' : 'text-gray-400 text-base font-medium'}`}>
+                        个聊
+                    </span>
+                    {activeTab === 'individual' && <div className="absolute bottom-0 w-6 h-1 bg-primary rounded-full shadow-sm animate-in zoom-in"></div>}
                  </div>
              </div>
          </div>
 
          {/* List */}
          <div className="flex-1 overflow-y-auto">
-            {mockChats.map(chat => (
-                <div key={chat.id} className="flex items-center px-5 py-4 border-b border-gray-50 hover:bg-gray-50/50 transition-colors cursor-pointer group">
+            {filteredChats.map(chat => (
+                <div 
+                    key={chat.id} 
+                    onClick={() => handleChatClick(chat.name)}
+                    className="flex items-center px-5 py-4 border-b border-gray-50 hover:bg-gray-50/50 transition-colors cursor-pointer group active:bg-gray-100"
+                >
                     <div className="relative mr-4">
                         <img src={chat.avatar} alt={chat.name} className="w-12 h-12 rounded-full object-cover border border-gray-100 shadow-sm group-hover:scale-105 transition-transform" />
                         {chat.isOnline ? (
@@ -101,10 +126,13 @@ const UrgentChat: React.FC = () => {
                             <h4 className="text-[15px] font-bold text-gray-800 truncate pr-2">{chat.name}</h4>
                             <span className="text-gray-400 text-xs font-mono">{chat.time}</span>
                         </div>
-                        <p className="text-gray-500 text-xs truncate">{chat.role}</p>
+                        <p className="text-gray-500 text-xs truncate">{chat.lastMessage}</p>
                     </div>
                 </div>
             ))}
+            {filteredChats.length === 0 && (
+                <div className="text-center text-gray-400 mt-10 text-sm">暂无消息</div>
+            )}
          </div>
        </div>
     </div>

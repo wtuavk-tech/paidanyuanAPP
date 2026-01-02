@@ -39,6 +39,17 @@ const mockPoolOrders = [
 ];
 
 const OrderPool: React.FC = () => {
+  const handleDispatch = (orderId: string) => {
+    const techs = ['张三师傅', '李四师傅', '王五师傅', '赵六师傅'];
+    const selectedTech = techs[Math.floor(Math.random() * techs.length)];
+    const time = Math.floor(Math.random() * 60) + 10;
+    alert(`[演示] 派单成功！\n\n订单号: ${orderId}\n指派给: ${selectedTech}\n预计到达: ${time}分钟\n\n通知已发送至师傅端APP。`);
+  };
+
+  const handleFilter = () => {
+    alert("[演示] 打开筛选面板\n可按：\n- 区域\n- 距离\n- 服务类型\n- 紧急程度\n进行筛选。");
+  };
+
   return (
     <div className="flex flex-col h-full bg-bg pb-24">
       <div className="bg-gradient-to-r from-blue-50 to-blue-100 pt-8 pb-4 text-center text-lg font-bold text-gray-800 shadow-sm border-b border-blue-200/50">
@@ -55,7 +66,10 @@ const OrderPool: React.FC = () => {
             />
             <Search className="w-5 h-5 text-gray-400" />
         </div>
-        <div className="flex flex-col items-center justify-center text-gray-500 text-[10px] gap-0.5">
+        <div 
+            onClick={handleFilter}
+            className="flex flex-col items-center justify-center text-gray-500 text-[10px] gap-0.5 cursor-pointer hover:text-primary transition-colors"
+        >
              <Filter className="w-5 h-5 mb-0.5" />
              <span>筛选</span>
         </div>
@@ -96,7 +110,12 @@ const OrderPool: React.FC = () => {
             </div>
 
             <div className="flex justify-end border-t border-gray-50 pt-3">
-                <button className="border border-gray-300 text-gray-700 font-bold rounded-full px-6 py-1.5 text-xs hover:bg-gray-50 hover:border-gray-400 transition-colors">派单</button>
+                <button 
+                    onClick={() => handleDispatch(order.id)}
+                    className="border border-gray-300 text-gray-700 font-bold rounded-full px-6 py-1.5 text-xs hover:bg-gray-50 hover:border-gray-400 transition-colors hover:text-primary hover:border-primary active:scale-95 transform"
+                >
+                    派单
+                </button>
             </div>
           </div>
         ))}
