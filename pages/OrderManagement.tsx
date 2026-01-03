@@ -112,6 +112,19 @@ const OrderManagement: React.FC = () => {
     { label: '派单率', value: '95%', color: 'text-blue-500' },
   ];
 
+  // Filter Configuration
+  const filterConfig = [
+    { label: '催单', color: 'text-red-600', border: 'border-red-600' },
+    { label: '收藏', color: 'text-amber-500', border: 'border-amber-500' },
+    { label: '全部', color: 'text-primary', border: 'border-primary' },
+    { label: '未派单', color: 'text-orange-500', border: 'border-orange-500' },
+    { label: '已派单', color: 'text-primary', border: 'border-primary' },
+    { label: '已接单', color: 'text-primary', border: 'border-primary' },
+    { label: '已完成', color: 'text-primary', border: 'border-primary' },
+    { label: '报错', color: 'text-red-500', border: 'border-red-500' },
+    { label: '作废', color: 'text-gray-400', border: 'border-gray-400' },
+  ];
+
   const handleQuickSearch = () => {
       const searchTerms = ['138xxxx1234', '20251209xxxx', '张小姐'];
       const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)];
@@ -278,15 +291,11 @@ const OrderManagement: React.FC = () => {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-3 gap-y-8 gap-x-2 text-center mb-4">
+            <div className="grid grid-cols-3 gap-3 text-center mb-4">
                 {statsData.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center relative group">
-                        <div className={`text-[22px] font-bold ${item.color} mb-1 font-sans`}>{item.value}</div>
-                        <div className="text-gray-600 text-sm">{item.label}</div>
-                        {/* Vertical Dividers */}
-                        {(index + 1) % 3 !== 0 && (
-                            <div className="absolute right-0 top-2 bottom-2 w-px bg-gray-200/60"></div>
-                        )}
+                    <div key={index} className="flex flex-col items-center justify-center py-2 px-1 rounded-lg border border-[#cbd5e1] bg-white/40">
+                        <div className={`text-[18px] font-bold ${item.color} mb-0.5 font-sans break-all`}>{item.value}</div>
+                        <div className="text-gray-600 text-xs">{item.label}</div>
                     </div>
                 ))}
             </div>
@@ -341,33 +350,22 @@ const OrderManagement: React.FC = () => {
       )}
 
       {/* Filter Tabs - Optimized for Scrolling & Visuals */}
-      <div className="w-full flex flex-nowrap items-center px-4 py-3 bg-white z-20 shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-x-auto no-scrollbar gap-6 touch-pan-x">
-        {['催单', '收藏', '全部', '未派单', '已派单', '已接单', '已完成', '报错', '作废'].map((filter) => {
-            const isActive = activeFilter === filter;
-            // Base styles
-            let btnClass = "text-sm whitespace-nowrap flex-shrink-0 transition-all duration-300 px-1 py-1 relative select-none ";
-            
-            // Conditional Styles
-            if (isActive) {
-                btnClass += "text-primary font-bold";
-            } else if (filter === '催单') {
-                btnClass += "text-red-600 font-black drop-shadow-sm scale-105 tracking-wide"; // Red, Extra Bold, Shadow
-            } else if (filter === '未派单') {
-                btnClass += "text-orange-500 font-black drop-shadow-sm scale-105 tracking-wide"; // Orange, Extra Bold, Shadow
-            } else {
-                btnClass += "text-gray-500 font-medium hover:text-gray-700";
-            }
-
+      <div className="w-full flex flex-nowrap items-center px-4 py-3 bg-white z-20 shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-x-auto no-scrollbar gap-3 touch-pan-x">
+        {filterConfig.map((filter) => {
+            const isActive = activeFilter === filter.label;
             return (
               <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={btnClass}
+                key={filter.label}
+                onClick={() => setActiveFilter(filter.label)}
+                className={`
+                    px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap flex-shrink-0 transition-all duration-200 border
+                    ${isActive 
+                        ? `${filter.color} ${filter.border} font-bold bg-transparent` 
+                        : 'text-gray-500 border-transparent hover:text-gray-700'
+                    }
+                `}
               >
-                {filter}
-                {isActive && (
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-primary rounded-t-full shadow-sm"></div>
-                )}
+                {filter.label}
               </button>
             );
         })}
