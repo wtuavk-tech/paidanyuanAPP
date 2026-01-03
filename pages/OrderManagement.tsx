@@ -402,8 +402,8 @@ const OrderManagement: React.FC = () => {
                 </div>
                 <span className="text-lg font-bold text-gray-700 tracking-wide font-mono">{order.phone}</span>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0 mt-0.5">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
                     <MapPin size={14} fill="currentColor" className="opacity-80"/>
                 </div>
                 <div className="flex-1 min-w-0">

@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 import { 
-  Settings, ChevronRight, 
+  Settings, ChevronRight, ChevronLeft,
   ClipboardList, Activity, Receipt, CreditCard, Calendar, Coins, Banknote, 
-  PhoneCall, Pencil, Megaphone
+  PhoneCall, Pencil, Megaphone, ShieldAlert, RotateCw
 } from 'lucide-react';
+
+const MenuItem = ({ label, extra }: { label: string, extra?: React.ReactNode }) => (
+    <div className="bg-white rounded-xl flex justify-between items-center p-4 active:bg-gray-50 transition-colors cursor-pointer" onClick={() => alert(`[演示] ${label}`)}>
+    <span className="text-gray-800 font-medium text-[15px]">{label}</span>
+    <div className="flex items-center gap-2">
+        {extra}
+        <ChevronRight className="text-gray-300 w-4 h-4" />
+    </div>
+    </div>
+);
 
 const PersonalCenter: React.FC = () => {
   const [balance, setBalance] = useState(117.29);
   const [badges, setBadges] = useState({ task: 0, advance: 11 });
+  const [currentView, setCurrentView] = useState<'main' | 'settings' | 'report'>('main');
 
   const handleWithdraw = () => {
       if (balance > 0) {
@@ -20,7 +31,6 @@ const PersonalCenter: React.FC = () => {
   };
 
   const handleGridClick = (key: string, label: string) => {
-      // Logic: simulate navigation or clearing badges
       if (badges[key as keyof typeof badges] > 0) {
           setBadges(prev => ({ ...prev, [key]: 0 }));
       }
@@ -41,8 +51,10 @@ const PersonalCenter: React.FC = () => {
       alert(`[演示] ${msg}`);
   };
 
-  const handleSettings = () => {
-      alert("[演示] 进入设置页面\n- 账号安全\n- 通知设置\n- 通用");
+  const handleRestart = () => {
+      if(confirm("确定要重启APP吗？")) {
+          window.location.reload();
+      }
   };
 
   const handleLogout = () => {
@@ -50,6 +62,77 @@ const PersonalCenter: React.FC = () => {
           alert("[演示] 已安全退出，返回登录页");
       }
   };
+
+  // --- Sub-Pages Rendering ---
+
+  if (currentView === 'settings') {
+      return (
+        <div className="flex flex-col h-full bg-bg">
+            {/* Header */}
+            <div className="bg-white px-4 py-3 flex items-center relative shadow-sm z-10">
+                <button onClick={() => setCurrentView('main')} className="absolute left-4 p-1 text-gray-800">
+                    <ChevronLeft size={26} />
+                </button>
+                <div className="flex-1 text-center font-bold text-lg text-gray-800">设置</div>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                 {/* Group 1 */}
+                 <div className="bg-white rounded-xl overflow-hidden">
+                     <div className="flex justify-between items-center p-4 border-b border-gray-50 active:bg-gray-50 cursor-pointer" onClick={() => alert('[演示] 本机号码')}>
+                        <span className="text-gray-800 font-medium text-[15px]">本机号码</span>
+                        <ChevronRight className="text-gray-300 w-4 h-4" />
+                     </div>
+                     <div className="flex justify-between items-center p-4 active:bg-gray-50 cursor-pointer" onClick={() => alert('[演示] 开启通知权限')}>
+                        <span className="text-gray-800 font-medium text-[15px]">开启通知权限</span>
+                        <ChevronRight className="text-gray-300 w-4 h-4" />
+                     </div>
+                 </div>
+
+                 <MenuItem label="系统常驻设置" />
+                 <MenuItem label="电池白名单设置" />
+                 
+                 <div className="bg-white rounded-xl flex justify-between items-center p-4 active:bg-gray-50 transition-colors cursor-pointer" onClick={() => alert('[演示] 清除缓存')}>
+                    <span className="text-gray-800 font-medium text-[15px]">清除缓存</span>
+                    <div className="flex items-center gap-2">
+                         <span className="text-gray-500 text-sm">268.05KB</span>
+                         <ChevronRight className="text-gray-300 w-4 h-4" />
+                    </div>
+                 </div>
+
+                 <MenuItem label="注销账号" />
+                 <MenuItem label="日志" />
+            </div>
+        </div>
+      );
+  }
+
+  if (currentView === 'report') {
+      return (
+        <div className="flex flex-col h-full bg-bg">
+            {/* Header */}
+            <div className="bg-white px-4 py-3 flex items-center relative shadow-sm z-10">
+                <button onClick={() => setCurrentView('main')} className="absolute left-4 p-1 text-gray-800">
+                    <ChevronLeft size={26} />
+                </button>
+                <div className="flex-1 text-center font-bold text-lg text-gray-800">监督举报</div>
+            </div>
+            
+            <div className="p-4">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                    <div className="text-[15px] text-gray-800 mb-6 font-medium tracking-wide">
+                        举报邮箱：3898531882@qq.com
+                    </div>
+                    <div className="text-sm text-red-500 leading-relaxed text-justify">
+                       *我们严格保密举报人的个人信息和隐私，确保举报人的合法权益不受侵犯。举报人如有需要，可以选择匿名举报，并给予相应保护，确保举报人信息安全。
+                    </div>
+                </div>
+            </div>
+        </div>
+      );
+  }
+
+  // --- Main View ---
 
   return (
     <div className="flex flex-col h-full bg-bg pb-24 overflow-y-auto">
@@ -207,7 +290,7 @@ const PersonalCenter: React.FC = () => {
         {/* Settings List */}
         <div className="bg-white rounded-3xl overflow-hidden shadow-card mb-6 border border-gray-50">
             <div 
-                onClick={handleSettings}
+                onClick={() => setCurrentView('settings')}
                 className="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer active:bg-gray-100"
             >
                 <div className="flex items-center gap-3">
@@ -216,13 +299,36 @@ const PersonalCenter: React.FC = () => {
                 </div>
                 <ChevronRight className="text-gray-300 w-4 h-4" />
             </div>
+            
             <div 
                 onClick={() => alert("[演示] ServiceMaster Pro v1.2.5\nBuild 20251225")}
-                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors cursor-pointer active:bg-gray-100"
+                className="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer active:bg-gray-100"
             >
                 <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full border-2 border-gray-400 flex items-center justify-center text-[10px] font-bold text-gray-500">i</div>
                     <span className="text-gray-800 text-sm font-medium">关于我们</span>
+                </div>
+                <ChevronRight className="text-gray-300 w-4 h-4" />
+            </div>
+
+            <div 
+                onClick={() => setCurrentView('report')}
+                className="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer active:bg-gray-100"
+            >
+                <div className="flex items-center gap-3">
+                    <ShieldAlert className="text-gray-400 w-5 h-5" />
+                    <span className="text-gray-800 text-sm font-medium">监督举报</span>
+                </div>
+                <ChevronRight className="text-gray-300 w-4 h-4" />
+            </div>
+
+            <div 
+                onClick={handleRestart}
+                className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors cursor-pointer active:bg-gray-100"
+            >
+                <div className="flex items-center gap-3">
+                    <RotateCw className="text-gray-400 w-5 h-5" />
+                    <span className="text-gray-800 text-sm font-medium">重启APP</span>
                 </div>
                 <ChevronRight className="text-gray-300 w-4 h-4" />
             </div>
