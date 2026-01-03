@@ -39,6 +39,45 @@ const mockOrders: Order[] = [
     address: '北京市朝阳区三里屯SOHO',
     status: OrderStatus.COMPLETED,
     tags: ['美团']
+  },
+  {
+    id: '2025-12-10 09:15:33',
+    type: '管道疏通',
+    subType: '库',
+    subTypeColor: 'bg-orange-500',
+    title: '马桶疏通',
+    time: '2025-12-10 09:15:33',
+    phone: '13512345678',
+    address: '北京市海淀区中关村软件园二期',
+    status: OrderStatus.PENDING,
+    tags: ['急'],
+    isError: false
+  },
+  {
+    id: '2025-12-10 10:42:11',
+    type: '家电维修',
+    subType: '库',
+    subTypeColor: 'bg-orange-500',
+    title: '洗衣机维修',
+    time: '2025-12-10 10:42:11',
+    phone: '15800009999',
+    address: '杭州市西湖区西溪湿地北门',
+    status: OrderStatus.PENDING,
+    tags: ['老客'],
+    isError: false
+  },
+  {
+    id: '2025-12-10 14:20:05',
+    type: '电路检修',
+    subType: '库',
+    subTypeColor: 'bg-orange-500',
+    title: '电路跳闸检测',
+    time: '2025-12-10 14:20:05',
+    phone: '18611223344',
+    address: '深圳市南山区科技园南区',
+    status: OrderStatus.PENDING,
+    tags: ['企业'],
+    isError: false
   }
 ];
 
@@ -114,6 +153,15 @@ const OrderManagement: React.FC = () => {
   const handleCardClick = (id: string) => {
       alert(`[演示] 进入订单 ${id} 详情页`);
   };
+
+  const filteredOrders = mockOrders.filter(order => {
+    if (activeFilter === '全部') return true;
+    if (activeFilter === '未派单') return order.status === OrderStatus.PENDING;
+    if (activeFilter === '已派单') return order.status === OrderStatus.DISPATCHED;
+    if (activeFilter === '已完成') return order.status === OrderStatus.COMPLETED;
+    if (activeFilter === '作废') return order.status === OrderStatus.CANCELED;
+    return true; // Show all for other filters in this demo
+  });
 
   return (
     <div className="flex flex-col h-full bg-bg pb-24 relative">
@@ -355,7 +403,15 @@ const OrderManagement: React.FC = () => {
 
       {/* Order List */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
-        {mockOrders.map((order) => (
+        {filteredOrders.length === 0 ? (
+           <div className="flex flex-col items-center justify-center pt-20 text-gray-400">
+               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <Search className="w-8 h-8 opacity-20" />
+               </div>
+               <span className="text-sm">暂无{activeFilter}订单</span>
+           </div>
+        ) : (
+          filteredOrders.map((order) => (
           <div key={order.id} onClick={() => handleCardClick(order.id)} className="bg-white rounded-2xl p-4 shadow-card hover:shadow-md transition-shadow duration-200 border border-gray-50 relative cursor-pointer active:scale-[0.99] transition-transform">
             
             {/* Status Bar Top */}
@@ -421,7 +477,7 @@ const OrderManagement: React.FC = () => {
 
             {/* Footer Actions */}
             <div className="flex items-center justify-between border-t border-gray-50 pt-3 relative">
-              <div className="relative">
+              <div className="relative flex-shrink-0 mr-2">
                   <button 
                       onClick={(e) => {
                           e.stopPropagation();
@@ -438,7 +494,7 @@ const OrderManagement: React.FC = () => {
                         {/* Backdrop */}
                         <div className="fixed inset-0 z-10" onClick={(e) => {e.stopPropagation(); setOpenMenuId(null)}}></div>
                         
-                        {/* Menu Content - Positioned ABOVE the button */}
+                        {/* Menu Content */}
                         <div className="absolute bottom-full left-0 mb-1 bg-white rounded-lg shadow-[0_4px_16px_rgba(0,0,0,0.12)] border border-gray-100 z-50 w-24 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 origin-bottom-left">
                             {['群聊', '开票', '中转', '取消', '修改'].map((action) => (
                                 <button 
@@ -454,26 +510,34 @@ const OrderManagement: React.FC = () => {
                   )}
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2 flex-nowrap overflow-x-auto no-scrollbar">
                 {order.status === OrderStatus.PENDING ? (
                     <>
-                        <button onClick={(e) => handleOrderButton('修改', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">修改</button>
-                        <button onClick={(e) => handleOrderButton('解决', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">解决</button>
-                        <button onClick={(e) => handleOrderButton('处理', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">处理</button>
+                        <button onClick={(e) => handleOrderButton('修改', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">修改</button>
+                        <button onClick={(e) => handleOrderButton('解决', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">解决</button>
+                        <button onClick={(e) => handleOrderButton('处理', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">处理</button>
                     </>
                 ) : (
                     <>
-                        <button onClick={(e) => handleOrderButton('报错', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">报错</button>
-                        <button onClick={(e) => handleOrderButton('作废', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">作废</button>
-                        <button onClick={(e) => handleOrderButton('完成', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">完成</button>
+                        <button onClick={(e) => handleOrderButton('报错', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">报错</button>
+                        <button onClick={(e) => handleOrderButton('作废', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">作废</button>
+                        <button onClick={(e) => handleOrderButton('完成', order.id, e)} className="border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap">完成</button>
                     </>
                 )}
                 
-                <button onClick={(e) => handleCopy(order.id, e)} className="border border-primary text-primary text-xs font-bold px-4 py-1.5 rounded-full hover:bg-blue-50 transition-colors">复制</button>
+                <button onClick={(e) => handleCopy(order.id, e)} className="border border-primary text-primary text-xs font-bold px-3 py-1.5 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap">复制</button>
+                {order.status === OrderStatus.PENDING && (
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); alert(`[演示] 跳转派单页面`); }}
+                        className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm hover:bg-red-600 transition-colors whitespace-nowrap"
+                    >
+                        派单
+                    </button>
+                )}
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   );
